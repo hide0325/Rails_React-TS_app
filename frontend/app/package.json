@@ -51,6 +51,8 @@
     "@typescript-eslint/parser": "^5.46.1",
     "axios": "^1.2.1",
     "eslint": "latest",
+    "eslint-config-next": "^13.0.7",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "latest",
