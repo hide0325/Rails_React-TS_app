@@ -1,4 +1,4 @@
-class Api::v1::TodosController < ApplicationController
+class Api::V1::TodosController < ApplicationController
   def index
     todos = Todo.order(updated_at: :desc)
     render json: todos
