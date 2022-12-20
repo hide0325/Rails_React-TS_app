@@ -44,20 +44,6 @@ const Wrapper = styled.div`
 `
 
 const App: FC = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_ENDPOINT}/todos`
-        )
-        console.log(response, '200 OK')
-      } catch (error) {
-        console.log(error, '404 error')
-      }
-    }
-    fetchData()
-  }, [])
-
   return (
     <>
       <Navbar>
