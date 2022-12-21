@@ -73,6 +73,8 @@ const EditButton = styled.span`
   margin: 0 7px;
 `
 
+const ENDPOINT = process.env.REACT_APP_ENDPOINT
+
 const TodoList: FC = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [searchName, setSearchName] = useState('')
@@ -82,7 +84,7 @@ const TodoList: FC = () => {
 
     const fetchTodos = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_ENDPOINT}/todos`)
+        const response = await axios.get(`${ENDPOINT}/todos`)
         if (!ignore) {
           console.log(response.data, 'OK!')
           setTodos(response.data)
@@ -101,13 +103,11 @@ const TodoList: FC = () => {
     }
   }, [])
 
-  const onChangeTodos = (event: ChangeEvent<HTMLInputElement>) => setSearchName(event.target.value)
-
   const removeAllTodos = async () => {
     const sure = confirm('Are you sure?')
     if (sure) {
       try {
-        const response = await axios.delete(`${process.env.REACT_APP_ENDPOINT}/todos/destroy_all`)
+        const response = await axios.delete(`${ENDPOINT}/todos/destroy_all`)
         console.log(response.data, 'OK!')
         setTodos([])
       } catch (error) {
@@ -126,7 +126,7 @@ const TodoList: FC = () => {
     }
 
     try {
-      const response = await axios.patch(`${process.env.REACT_APP_ENDPOINT}/todos/${todo.id}`, data)
+      const response = await axios.patch(`${ENDPOINT}/todos/${todo.id}`, data)
       console.log(response.data, 'OK!')
       const newTodos: Todo[] = [...todos]
       newTodos[index].is_completed = response.data.is_completed
@@ -137,6 +137,19 @@ const TodoList: FC = () => {
       }
     }
   }
+
+  const onChangeTodos = (event: ChangeEvent<HTMLInputElement>) => setSearchName(event.target.value)
+
+  const filteredTodos = (todos: Todo[]) => {
+    return todos.filter((todo) => {
+      if (searchName === '') {
+        return todo
+      } else if (todo.name.toLowerCase().includes(searchName.toLowerCase())) {
+        return todo
+      }
+    })
+  }
+
   return (
     <>
       <h1>Todo List</h1>
@@ -149,35 +162,27 @@ const TodoList: FC = () => {
         <RemoveAllButton onClick={removeAllTodos}>Remove All</RemoveAllButton>
       </SearchAndButton>
       <div>
-        {todos
-          .filter((todo) => {
-            if (searchName === '') {
-              return todo
-            } else if (todo.name.toLowerCase().includes(searchName.toLowerCase())) {
-              return todo
-            }
-          })
-          .map((todo, key) => {
-            return (
-              <Row key={key}>
-                {todo.is_completed ? (
-                  <CheckedBox>
-                    <ImCheckboxChecked onClick={() => updateIsCompleted(key, todo)} />
-                  </CheckedBox>
-                ) : (
-                  <UncheckedBox>
-                    <ImCheckboxUnchecked onClick={() => updateIsCompleted(key, todo)} />
-                  </UncheckedBox>
-                )}
-                <TodoName is_completed={todo.is_completed}>{todo.name}</TodoName>
-                <Link to={`/todos/${todo.id}/edit`}>
-                  <EditButton>
-                    <AiFillEdit />
-                  </EditButton>
-                </Link>
-              </Row>
-            )
-          })}
+        {filteredTodos(todos).map((todo, key) => {
+          return (
+            <Row key={key}>
+              {todo.is_completed ? (
+                <CheckedBox>
+                  <ImCheckboxChecked onClick={() => updateIsCompleted(key, todo)} />
+                </CheckedBox>
+              ) : (
+                <UncheckedBox>
+                  <ImCheckboxUnchecked onClick={() => updateIsCompleted(key, todo)} />
+                </UncheckedBox>
+              )}
+              <TodoName is_completed={todo.is_completed}>{todo.name}</TodoName>
+              <Link to={`/todos/${todo.id}/edit`}>
+                <EditButton>
+                  <AiFillEdit />
+                </EditButton>
+              </Link>
+            </Row>
+          )
+        })}
       </div>
     </>
   )
