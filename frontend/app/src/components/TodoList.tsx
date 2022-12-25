@@ -1,15 +1,10 @@
 import { FC, useState, useEffect, ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import styled from 'styled-components'
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 import { AiFillEdit } from 'react-icons/ai'
-
-interface Todo {
-  id: string
-  name: string
-  is_completed: boolean
-}
+import { Todo, ENDPOINT } from '../App'
 
 const SearchAndButton = styled.div`
   display: flex;
@@ -38,9 +33,9 @@ const RemoveAllButton = styled.button`
   cursor: pointer;
 `
 
-const TodoName = styled.span<{ is_completed: boolean }>`
+const TodoName = styled.span<{ completed: boolean }>`
   font-size: 27px;
-  ${({ is_completed }) => is_completed && `opacity: 0.4;`}
+  ${({ completed }) => completed && `opacity: 0.4;`}
 `
 
 const Row = styled.div`
@@ -73,8 +68,6 @@ const EditButton = styled.span`
   margin: 0 7px;
 `
 
-const ENDPOINT = process.env.REACT_APP_ENDPOINT
-
 const TodoList: FC = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [searchName, setSearchName] = useState('')
@@ -90,7 +83,7 @@ const TodoList: FC = () => {
           setTodos(response.data)
         }
       } catch (error) {
-        if (axios.isAxiosError(error)) {
+        if (isAxiosError(error)) {
           console.log(error.message, 'ERROR!')
         }
       }
@@ -111,7 +104,7 @@ const TodoList: FC = () => {
         console.log(response.data, 'OK!')
         setTodos([])
       } catch (error) {
-        if (axios.isAxiosError(error)) {
+        if (isAxiosError(error)) {
           console.log(error.message, 'ERROR!')
         }
       }
@@ -122,17 +115,17 @@ const TodoList: FC = () => {
     const data = {
       id: todo.id,
       name: todo.name,
-      is_completed: !todo.is_completed,
+      completed: !todo.completed,
     }
 
     try {
       const response = await axios.patch(`${ENDPOINT}/todos/${todo.id}`, data)
       console.log(response.data, 'OK!')
       const newTodos: Todo[] = [...todos]
-      newTodos[index].is_completed = response.data.is_completed
+      newTodos[index].completed = response.data.completed
       setTodos(newTodos)
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         console.log(error.message, 'ERROR!')
       }
     }
@@ -165,7 +158,7 @@ const TodoList: FC = () => {
         {filteredTodos(todos).map((todo, key) => {
           return (
             <Row key={key}>
-              {todo.is_completed ? (
+              {todo.completed ? (
                 <CheckedBox>
                   <ImCheckboxChecked onClick={() => updateIsCompleted(key, todo)} />
                 </CheckedBox>
@@ -174,7 +167,7 @@ const TodoList: FC = () => {
                   <ImCheckboxUnchecked onClick={() => updateIsCompleted(key, todo)} />
                 </UncheckedBox>
               )}
-              <TodoName is_completed={todo.is_completed}>{todo.name}</TodoName>
+              <TodoName completed={todo.completed}>{todo.name}</TodoName>
               <Link to={`/todos/${todo.id}/edit`}>
                 <EditButton>
                   <AiFillEdit />
