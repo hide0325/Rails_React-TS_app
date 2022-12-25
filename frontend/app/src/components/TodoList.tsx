@@ -4,12 +4,7 @@ import axios, { isAxiosError } from 'axios'
 import styled from 'styled-components'
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 import { AiFillEdit } from 'react-icons/ai'
-
-interface Todo {
-  id: string | null
-  name: string
-  completed: boolean
-}
+import { Todo, ENDPOINT } from '../App'
 
 const SearchAndButton = styled.div`
   display: flex;
@@ -72,8 +67,6 @@ const EditButton = styled.span`
   align-items: center;
   margin: 0 7px;
 `
-
-const ENDPOINT = process.env.REACT_APP_ENDPOINT
 
 const TodoList: FC = () => {
   const [todos, setTodos] = useState<Todo[]>([])
