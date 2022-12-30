@@ -44,7 +44,7 @@ const Icon = styled.span`
   margin: 0 7px;
 `
 
-const AddTodo: FC = (props: any) => {
+const AddTodo: FC = () => {
   const initialTodo = {
     id: null,
     name: '',
@@ -74,7 +74,7 @@ const AddTodo: FC = (props: any) => {
 
     try {
       const response = await axios.post<Todo>(`${ENDPOINT}/todos`, data)
-      console.log(response.data, 'OK!')
+      console.log(response.data, 'OK! === saveTodo ===')
       setTodo({
         id: response.data.id,
         name: response.data.name,
@@ -84,7 +84,7 @@ const AddTodo: FC = (props: any) => {
       navigate('/todos')
     } catch (error) {
       if (isAxiosError(error)) {
-        console.log(error.message, 'ERROR!')
+        console.log(error.message, 'ERROR! === saveTodo ===')
       }
     }
   }
