@@ -20,7 +20,7 @@ const SearchForm = styled.input`
   padding: 10px;
 `
 
-const RemoveAllButton = styled.button`
+const DeleteAllButton = styled.button`
   width: 16%;
   height: 40px;
   background: #f54242;
@@ -77,14 +77,14 @@ const TodoList: FC = () => {
 
     const fetchTodos = async () => {
       try {
-        const response = await axios.get(`${ENDPOINT}/todos`)
+        const response = await axios.get<Todo[]>(`${ENDPOINT}/todos`)
         if (!ignore) {
-          console.log(response.data, 'OK!')
+          console.log(response.data, 'OK! === fetchTodos ===')
           setTodos(response.data)
         }
       } catch (error) {
         if (isAxiosError(error)) {
-          console.log(error.message, 'ERROR!')
+          console.log(error.message, 'ERROR! === fetchTodos ===')
         }
       }
     }
@@ -96,16 +96,16 @@ const TodoList: FC = () => {
     }
   }, [])
 
-  const removeAllTodos = async () => {
+  const deleteAllTodos = async () => {
     const sure = confirm('Are you sure?')
     if (sure) {
       try {
-        const response = await axios.delete(`${ENDPOINT}/todos/destroy_all`)
-        console.log(response.data, 'OK!')
+        const response = await axios.delete<Todo[]>(`${ENDPOINT}/todos/destroy_all`)
+        console.log(response.data, 'OK! === deleteAllTodos ===')
         setTodos([])
       } catch (error) {
         if (isAxiosError(error)) {
-          console.log(error.message, 'ERROR!')
+          console.log(error.message, 'ERROR! === deleteAllTodos ===')
         }
       }
     }
@@ -120,13 +120,13 @@ const TodoList: FC = () => {
 
     try {
       const response = await axios.patch(`${ENDPOINT}/todos/${todo.id}`, data)
-      console.log(response.data, 'OK!')
+      console.log(response.data, 'OK! === updateIsCompleted ===')
       const newTodos: Todo[] = [...todos]
       newTodos[index].completed = response.data.completed
       setTodos(newTodos)
     } catch (error) {
       if (isAxiosError(error)) {
-        console.log(error.message, 'ERROR!')
+        console.log(error.message, 'ERROR! === updateIsCompleted ===')
       }
     }
   }
@@ -152,7 +152,7 @@ const TodoList: FC = () => {
           placeholder="Search todo..."
           onChange={(event) => onChangeTodos(event)}
         />
-        <RemoveAllButton onClick={removeAllTodos}>Remove All</RemoveAllButton>
+        <DeleteAllButton onClick={deleteAllTodos}>Delete All</DeleteAllButton>
       </SearchAndButton>
       <div>
         {filteredTodos(todos).map((todo, key) => {
