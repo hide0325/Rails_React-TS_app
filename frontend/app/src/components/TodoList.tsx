@@ -111,7 +111,7 @@ const TodoList: FC = () => {
     }
   }
 
-  const updateIsCompleted = async (index: number, todo: Todo) => {
+  const updateCompleted = async (index: number, todo: Todo) => {
     const data = {
       id: todo.id,
       name: todo.name,
@@ -120,13 +120,13 @@ const TodoList: FC = () => {
 
     try {
       const response = await axios.patch(`${ENDPOINT}/todos/${todo.id}`, data)
-      console.log(response.data, 'OK! === updateIsCompleted ===')
+      console.log(response.data, 'OK! === updateCompleted ===')
       const newTodos: Todo[] = [...todos]
       newTodos[index].completed = response.data.completed
       setTodos(newTodos)
     } catch (error) {
       if (isAxiosError(error)) {
-        console.log(error.message, 'ERROR! === updateIsCompleted ===')
+        console.log(error.message, 'ERROR! === updateCompleted ===')
       }
     }
   }
@@ -160,11 +160,11 @@ const TodoList: FC = () => {
             <Row key={key}>
               {todo.completed ? (
                 <CheckedBox>
-                  <ImCheckboxChecked onClick={() => updateIsCompleted(key, todo)} />
+                  <ImCheckboxChecked onClick={() => updateCompleted(key, todo)} />
                 </CheckedBox>
               ) : (
                 <UncheckedBox>
-                  <ImCheckboxUnchecked onClick={() => updateIsCompleted(key, todo)} />
+                  <ImCheckboxUnchecked onClick={() => updateCompleted(key, todo)} />
                 </UncheckedBox>
               )}
               <TodoName completed={todo.completed}>{todo.name}</TodoName>
