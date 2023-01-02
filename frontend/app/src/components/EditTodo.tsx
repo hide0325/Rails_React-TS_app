@@ -1,10 +1,15 @@
 import { FC, useState, useEffect, ChangeEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios, { isAxiosError } from 'axios'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Todo, ENDPOINT } from '../App'
+
+export interface Button {
+  variant: string
+  onClick: () => void
+}
 
 const InputName = styled.input`
   font-size: 20px;
@@ -20,38 +25,33 @@ const CurrentStatus = styled.div`
   font-weight: bold;
 `
 
-const IsCompletedButton = styled.button`
+const Button = styled.button<Button>`
   color: #fff;
   font-weight: 500;
   font-size: 17px;
   padding: 5px 10px;
-  background: #f2a115;
+  margin-right: 10px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
-`
-
-const EditButton = styled.button`
-  color: #fff;
-  font-weight: 500;
-  font-size: 17px;
-  padding: 5px 10px;
-  margin: 0 10px;
-  background: #0ac620;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-`
-
-const DeleteButton = styled.button`
-  color: #fff;
-  font-weight: 500;
-  font-size: 17px;
-  padding: 5px 10px;
-  background: #f54242;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
+  ${({ variant }) => {
+    switch (variant) {
+      case 'completed':
+        return css`
+          background: #f2a115;
+        `
+      case 'edit':
+        return css`
+          background: #0ac620;
+        `
+      case 'delete':
+        return css`
+          background: #f54242;
+        `
+      default:
+        break
+    }
+  }}
 `
 
 const EditTodo: FC = () => {
@@ -75,7 +75,7 @@ const EditTodo: FC = () => {
     })
   }
 
-  const updateIsCompleted = async (currentTodo: Todo) => {
+  const updateCompleted = async (currentTodo: Todo) => {
     const data = {
       id: currentTodo.id,
       name: currentTodo.name,
@@ -84,11 +84,11 @@ const EditTodo: FC = () => {
 
     try {
       const response = await axios.patch<Todo>(`${ENDPOINT}/todos/${currentTodo.id}`, data)
-      console.log(response.data, 'OK! === updateIsCompleted ===')
+      console.log(response.data, 'OK! === updateCompleted ===')
       setCurrentTodo(response.data)
     } catch (error) {
       if (isAxiosError(error)) {
-        console.log(error.message, 'ERROR! === updateIsCompleted ===')
+        console.log(error.message, 'ERROR! === updateCompleted ===')
       }
     }
   }
@@ -162,17 +162,23 @@ const EditTodo: FC = () => {
             <CurrentStatus>{currentTodo.completed ? 'Completed' : 'Uncompleted'}</CurrentStatus>
           </div>
         </div>
-        {currentTodo.completed ? (
-          <IsCompletedButton onClick={() => updateIsCompleted(currentTodo)}>
-            Uncompleted
-          </IsCompletedButton>
-        ) : (
-          <IsCompletedButton onClick={() => updateIsCompleted(currentTodo)}>
-            Completed
-          </IsCompletedButton>
-        )}
-        <EditButton onClick={updateTodo}>Update</EditButton>
-        <DeleteButton onClick={deleteTodo}>Delete</DeleteButton>
+        <div>
+          {currentTodo.completed ? (
+            <Button variant="completed" onClick={() => updateCompleted(currentTodo)}>
+              Uncompleted
+            </Button>
+          ) : (
+            <Button variant="completed" onClick={() => updateCompleted(currentTodo)}>
+              Completed
+            </Button>
+          )}
+          <Button variant="edit" onClick={updateTodo}>
+            Update
+          </Button>
+          <Button variant="delete" onClick={deleteTodo}>
+            Delete
+          </Button>
+        </div>
       </div>
     </>
   )
