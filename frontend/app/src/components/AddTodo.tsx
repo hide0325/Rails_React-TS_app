@@ -1,11 +1,11 @@
 import { FC, useState, ChangeEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import styled from 'styled-components'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { FiSend } from 'react-icons/fi'
-import { Todo, ENDPOINT } from '../App'
+import TodoRepository from 'repositories/TodoRepository'
 
 const InputAndButton = styled.div`
   display: flex;
@@ -68,17 +68,17 @@ const AddTodo: FC = () => {
   const navigate = useNavigate()
 
   const saveTodo = async () => {
-    const data = {
+    const newTodo = {
       name: todo.name,
     }
 
     try {
-      const response = await axios.post<Todo>(`${ENDPOINT}/todos`, data)
-      console.log(response.data, 'OK! === saveTodo ===')
+      const { data } = await TodoRepository.createTodo(newTodo)
+      console.log(data, 'OK! === saveTodo ===')
       setTodo({
-        id: response.data.id,
-        name: response.data.name,
-        completed: response.data.completed,
+        id: data.id,
+        name: data.name,
+        completed: data.completed,
       })
       notify()
       navigate('/todos')

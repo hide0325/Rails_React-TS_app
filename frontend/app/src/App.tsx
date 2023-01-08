@@ -1,16 +1,10 @@
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import AddTodo from 'components/AddTodo'
 import TodoList from 'components/TodoList'
 import EditTodo from 'components/EditTodo'
-
-export interface Todo {
-  id: string | null
-  name: string
-  completed: boolean
-}
 
 export const ENDPOINT = process.env.REACT_APP_ENDPOINT
 

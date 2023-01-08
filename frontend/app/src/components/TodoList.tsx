@@ -1,10 +1,10 @@
 import { FC, useState, useEffect, ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import styled from 'styled-components'
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 import { AiFillEdit } from 'react-icons/ai'
-import { Todo, ENDPOINT } from '../App'
+import TodoRepository from 'repositories/TodoRepository'
 
 const SearchAndButton = styled.div`
   display: flex;
@@ -77,10 +77,10 @@ const TodoList: FC = () => {
 
     const fetchTodos = async () => {
       try {
-        const response = await axios.get<Todo[]>(`${ENDPOINT}/todos`)
+        const { data } = await TodoRepository.getTodos()
         if (!ignore) {
-          console.log(response.data, 'OK! === fetchTodos ===')
-          setTodos(response.data)
+          console.log(data, 'OK! === fetchTodos ===')
+          setTodos(data)
         }
       } catch (error) {
         if (isAxiosError(error)) {
@@ -100,8 +100,8 @@ const TodoList: FC = () => {
     const sure = confirm('Are you sure?')
     if (sure) {
       try {
-        const response = await axios.delete<Todo[]>(`${ENDPOINT}/todos/destroy_all`)
-        console.log(response.data, 'OK! === deleteAllTodos ===')
+        const { data } = await TodoRepository.deleteAllTodos()
+        console.log(data, 'OK! === deleteAllTodos ===')
         setTodos([])
       } catch (error) {
         if (isAxiosError(error)) {
@@ -111,18 +111,18 @@ const TodoList: FC = () => {
     }
   }
 
-  const updateCompleted = async (index: number, todo: Todo) => {
-    const data = {
-      id: todo.id,
-      name: todo.name,
-      completed: !todo.completed,
+  const updateCompleted = async (index: number, currentTodo: Todo) => {
+    const todo = {
+      id: currentTodo.id,
+      name: currentTodo.name,
+      completed: !currentTodo.completed,
     }
 
     try {
-      const response = await axios.patch(`${ENDPOINT}/todos/${todo.id}`, data)
-      console.log(response.data, 'OK! === updateCompleted ===')
+      const { data } = await TodoRepository.updateTodo(todo)
+      console.log(data, 'OK! === updateCompleted ===')
       const newTodos: Todo[] = [...todos]
-      newTodos[index].completed = response.data.completed
+      newTodos[index].completed = data.completed
       setTodos(newTodos)
     } catch (error) {
       if (isAxiosError(error)) {

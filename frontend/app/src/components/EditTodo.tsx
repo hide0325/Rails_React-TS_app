@@ -1,12 +1,12 @@
 import { FC, useState, useEffect, ChangeEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import styled, { css } from 'styled-components'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Todo, ENDPOINT } from '../App'
+import TodoRepository from 'repositories/TodoRepository'
 
-export interface Button {
+interface Button {
   variant: string
   onClick: () => void
 }
@@ -76,16 +76,16 @@ const EditTodo: FC = () => {
   }
 
   const updateCompleted = async (currentTodo: Todo) => {
-    const data = {
+    const todo = {
       id: currentTodo.id,
       name: currentTodo.name,
       completed: !currentTodo.completed,
     }
 
     try {
-      const response = await axios.patch<Todo>(`${ENDPOINT}/todos/${currentTodo.id}`, data)
-      console.log(response.data, 'OK! === updateCompleted ===')
-      setCurrentTodo(response.data)
+      const { data } = await TodoRepository.updateTodo(todo)
+      console.log(data, 'OK! === updateCompleted ===')
+      setCurrentTodo(data)
     } catch (error) {
       if (isAxiosError(error)) {
         console.log(error.message, 'ERROR! === updateCompleted ===')
@@ -97,8 +97,8 @@ const EditTodo: FC = () => {
 
   const updateTodo = async () => {
     try {
-      const response = await axios.patch<Todo>(`${ENDPOINT}/todos/${currentTodo.id}`, currentTodo)
-      console.log(response.data, 'OK! === updateTodo ===')
+      const { data } = await TodoRepository.updateTodo(currentTodo)
+      console.log(data, 'OK! === updateTodo ===')
       notify()
       navigate('/todos')
     } catch (error) {
@@ -112,8 +112,8 @@ const EditTodo: FC = () => {
     const sure = confirm('Are you sure?')
     if (sure) {
       try {
-        const response = await axios.delete<Todo>(`${ENDPOINT}/todos/${currentTodo.id}`)
-        console.log(response.data, 'OK! === deleteTodo ===')
+        const { data } = await TodoRepository.deleteTodo(currentTodo.id)
+        console.log(data, 'OK! === deleteTodo ===')
         navigate('/todos')
       } catch (error) {
         if (isAxiosError(error)) {
@@ -130,10 +130,10 @@ const EditTodo: FC = () => {
 
     const fetchTodo = async (id: string) => {
       try {
-        const response = await axios.get<Todo>(`${ENDPOINT}/todos/${id}`)
+        const { data } = await TodoRepository.getTodo(id)
         if (!ignore) {
-          console.log(response.data, 'OK! === fetchTodo ===')
-          setCurrentTodo(response.data)
+          console.log(data, 'OK! === fetchTodo ===')
+          setCurrentTodo(data)
         }
       } catch (error) {
         if (isAxiosError(error)) {
