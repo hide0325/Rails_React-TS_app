@@ -2,6 +2,7 @@ import { FC, useState, useEffect, ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { isAxiosError } from 'axios'
 import styled from 'styled-components'
+import ReactPaginate from 'react-paginate'
 import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 import { AiFillEdit } from 'react-icons/ai'
 import TodoRepository from 'repositories/TodoRepository'
@@ -14,10 +15,13 @@ const SearchAndButton = styled.div`
 
 const SearchForm = styled.input`
   font-size: 20px;
-  width: 100%;
   height: 40px;
   margin: 10px 0;
   padding: 10px;
+`
+
+const TitleWrapper = styled.div`
+  display: flex;
 `
 
 const DeleteAllButton = styled.button`
@@ -26,7 +30,7 @@ const DeleteAllButton = styled.button`
   background: #f54242;
   border: none;
   font-weight: 500;
-  margin-left: 10px;
+  margin-left: auto;
   padding: 5px 10px;
   border-radius: 3px;
   color: #fff;
@@ -68,9 +72,49 @@ const EditButton = styled.span`
   margin: 0 7px;
 `
 
+const Paginate = styled(ReactPaginate).attrs({
+  containerClassName: 'pagination',
+  previousClassName: 'previous',
+  nextClassName: 'next',
+  activeClassName: 'active',
+  disabledClassName: 'disabled',
+})`
+  margin: 27px 81px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  list-style-type: none;
+  li a {
+    border-radius: 7px;
+    padding: 0.1rem 1rem;
+    border: gray 1px solid;
+    cursor: pointer;
+  }
+  li.previous a,
+  li.next a,
+  li.break a {
+    border-color: transparent;
+  }
+  li.active a {
+    background-color: #0366d6;
+    border-color: transparent;
+    color: white;
+    min-width: 32px;
+  }
+  li.disabled a {
+    color: grey;
+  }
+  li.disable,
+  li.disabled a {
+    cursor: default;
+  }
+`
+
 const TodoList: FC = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [searchName, setSearchName] = useState('')
+  const [offset, setOffset] = useState(0)
+  const perPage = 10
 
   useEffect(() => {
     let ignore = false
@@ -143,19 +187,26 @@ const TodoList: FC = () => {
     })
   }
 
+  const handlePageChange = (data: { selected: number }) => {
+    const pageNumber = data['selected']
+    setOffset(pageNumber * perPage)
+  }
+
   return (
     <>
-      <h1>Todo List</h1>
+      <TitleWrapper>
+        <h1>Todo List</h1>
+        <DeleteAllButton onClick={deleteAllTodos}>Delete All</DeleteAllButton>
+      </TitleWrapper>
       <SearchAndButton>
         <SearchForm
           type="text"
           placeholder="Search todo..."
           onChange={(event) => onChangeTodos(event)}
         />
-        <DeleteAllButton onClick={deleteAllTodos}>Delete All</DeleteAllButton>
       </SearchAndButton>
       <div>
-        {filteredTodos(todos).map((todo, key) => {
+        {filteredTodos(todos.slice(offset, offset + perPage)).map((todo, key) => {
           return (
             <Row key={key}>
               {todo.completed ? (
@@ -177,6 +228,15 @@ const TodoList: FC = () => {
           )
         })}
       </div>
+      <Paginate
+        previousLabel={'<'}
+        nextLabel={'>'}
+        breakLabel={'...'}
+        pageCount={Math.ceil(todos.length / perPage)}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={1}
+        onPageChange={handlePageChange}
+      />
     </>
   )
 }
