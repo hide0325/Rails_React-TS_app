@@ -166,7 +166,7 @@ const TodoList: FC = () => {
       const { data } = await TodoRepository.updateTodo(todo)
       console.log(data, 'OK! === updateCompleted ===')
       const newTodos: Todo[] = [...todos]
-      newTodos[index].completed = data.completed
+      newTodos[index + offset].completed = data.completed
       setTodos(newTodos)
     } catch (error) {
       if (isAxiosError(error)) {
