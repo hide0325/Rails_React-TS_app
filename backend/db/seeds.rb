@@ -8,13 +8,169 @@
 
 SAMPLE_TODOS = [
   {
-    name: 'Going around the world',
+    name: 'Going around the world'
   },
   {
-    name: 'graduating from college',
+    name: 'graduating from college'
   },
   {
-    name: 'publishing a book',
+    name: 'publishing a book'
+  },
+  {
+    name: 'Create a compost pile'
+  },
+  {
+    name: 'Make own LEGO creation'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Watch a classic movie'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Buy a new house decoration'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Bake pastries for me and neighbor'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Go see a Broadway production'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Take cat on a walk'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Invite some friends over for a game night'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Invite some friends over for a game night'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Invite some friends over for a game night'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Invite some friends over for a game night'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Do something..'
+  },
+  {
+    name: 'Invite some friends over for a game night'
   }
 ]
 
