@@ -5,3 +5,4 @@
 - フロントに TypeScript
 - API 連携にリポジトリファクトリパターン
 - Docker で環境構築
+- CRUD
